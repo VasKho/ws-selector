@@ -15,7 +15,7 @@ This package isn't available on [[https://melpa.org][MELPA]], so to install it y
        ("Configs" . "~/.config")
        ("Emacs" . "~/.emacs.d")
        ("Projects" . "~/Documents")))
-    :init (ws-selector--preprocess-selection-alist)
+    :config (ws-selector--preprocess-selection-alist)
     :bind ("C-c C-w s" . ws-selector-select-workspace))
 #+end_src
 
