@@ -20,6 +20,11 @@
   :type 'variable
   :group 'ws-selector)
 
+(defcustom ws-selector-workdir-indent 2
+  "This variable is used to configure indent in completion view."
+  :type 'variable
+  :group 'ws-selector)
+
 (defvar ws-selector-workspace-list '()
   "Don't edit this variable manually.")
 
@@ -28,7 +33,7 @@
 Now it adds more whitespaces before directory of workspace to make its look
 in vertico completion more nice.  This function must be called after
 initializing."
-  (let ((longest-prefix-len (+ 2 (apply #'max (mapcar (lambda (a) (length (car a))) ws-selector-selection-alist)))))
+  (let ((longest-prefix-len (+ ws-selector-workdir-indent (apply #'max (mapcar (lambda (a) (length (car a))) ws-selector-selection-alist)))))
     (setq ws-selector-selection-alist
 	  (mapcar
 	   (lambda (a)
@@ -97,18 +102,6 @@ FRAME defaults to `selected-frame'"
 (setq after-delete-frame-functions
       (append after-delete-frame-functions
 	      '(ws-selector--remove-deleted-frames-from-list)))
-
-(setq ws-selector-selection-alist
-      (append ws-selector-selection-alist
-	      '(("Configs" . "~/.config")
-		("Emacs" . "~/.emacs.d")
-		("Projects" . "~/Documents")
-		("Work" . "~/ostis/source")
-		("Study" . "~/Study"))))
-
-(ws-selector--preprocess-selection-alist)
-
-(global-set-key (kbd "C-c C-w s") #'ws-selector-select-workspace)
 
 (provide 'ws-selector)
 ;;; ws-selector.el ends here
