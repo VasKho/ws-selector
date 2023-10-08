@@ -50,7 +50,7 @@ initializing."
 	   return nil)
   (push (cons frame path) ws-selector-workspace-list)
   (when (fboundp 'dired-change-workdir-hook)
-    (apply #'dired-change-workdir-hook path)))
+    (apply #'dired-change-workdir-hook `(,path))))
 
 (defun ws-selector--set-frame-workspace (frame &optional workspace-name)
   "This function is used to set workspace with name WORKSPACE-NAME for FRAME."
