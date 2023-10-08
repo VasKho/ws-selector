@@ -41,6 +41,7 @@ initializing."
 	     (cons (car a) (concat (make-string (- longest-prefix-len (length (car a))) ? ) (cdr a))))
 		  ws-selector-selection-alist))))
 
+;;;###autoload
 (defun ws-selector-set-frame-working-directory (frame path)
   "This function is used to set PATH as working directory for FRAME."
   (cl-loop for cons in ws-selector-workspace-list
@@ -48,13 +49,8 @@ initializing."
 	   (setq ws-selector-workspace-list (remove cons ws-selector-workspace-list))
 	   return nil)
   (push (cons frame path) ws-selector-workspace-list)
-  (when (and (require 'dired-sidebar nil 'noerror)
-	     (dired-sidebar-showing-sidebar-p))
-    (pop-to-buffer (dired-sidebar-buffer))
-    (dired-sidebar-with-no-dedication
-     (find-alternate-file (string-trim-left path))
-     (dired-sidebar-mode)
-     (dired-sidebar-update-state (current-buffer)))))
+  (when (fboundp 'dired-change-workdir-hook)
+    (apply #'dired-change-workdir-hook path)))
 
 (defun ws-selector--set-frame-workspace (frame &optional workspace-name)
   "This function is used to set workspace with name WORKSPACE-NAME for FRAME."
@@ -84,6 +80,7 @@ It returns description (i.e. working directory) for CANDIDATE
 according to `ws-selector-selection-alist'."
   (cdr (assoc candidate ws-selector-selection-alist)))
 
+;;;###autoload
 (defun ws-selector-get-working-directory (&optional frame)
   "Get working directory for FRAME.
 FRAME defaults to `selected-frame'"
@@ -93,6 +90,7 @@ FRAME defaults to `selected-frame'"
 	   when (eq (car cons) frame)
 	   return (string-trim-left (cdr cons))))
 
+;;;###autoload
 (defun ws-selector-select-workspace ()
   "This function is used to select workspace for `selected-frame'."
   (interactive)
@@ -103,6 +101,8 @@ FRAME defaults to `selected-frame'"
 (setq after-delete-frame-functions
       (append after-delete-frame-functions
 	      '(ws-selector--remove-deleted-frames-from-list)))
+
+(ws-selector--preprocess-selection-alist)
 
 (provide 'ws-selector)
 ;;; ws-selector.el ends here
