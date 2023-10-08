@@ -1,0 +1,42 @@
+* ws-selector
+
+This plugin is developed to separate working directories for each frame.
+
+* Installation
+
+This package isn't available on [[https://melpa.org][MELPA]], so to install it you may use [[https://github.com/radian-software/straight.el][straight]] or just copy ~ws-selector.el~ to your emacs configuration directory.
+
+#+begin_src emacs-lisp
+  (use-package ws-selector
+    :straight (ws-selector :type git :host github :repo "VasKho/ws-selector.el")
+    :custom
+    (ws-selector-selection-alist
+     '(("Home" . "~/")
+       ("Configs" . "~/.config")
+       ("Emacs" . "~/.emacs.d")
+       ("Projects" . "~/Documents")))
+    :init (ws-selector--preprocess-selection-alist)
+    :bind ("C-c C-w s" . ws-selector-select-workspace))
+#+end_src
+
+This package might be combined with [[https://github.com/jojojames/dired-sidebar][dired-sidebar]].
+
+* Configuration
+
+Pakcage provides the following customs to configure the look and behavior:
+
+*ws-selector-selection-alist*
+This variable must contain cons which are (<name> . <workspace-directory>).
+
+*ws-selector-workdir-indent*
+This variable is used to configure indent in completion view.
+
+To interact with package functionality you may use the following functions:
+*ws-selector-set-frame-working-directory (frame path)*
+This function is used to set PATH as working directory for FRAME.
+
+*ws-selector-get-working-directory (&optional frame)*
+Get working directory for FRAME. FRAME defaults to ~selected-frame~.
+
+*ws-selector-select-workspace*
+This function is used to select workspace for ~selected-frame~.

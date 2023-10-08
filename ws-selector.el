@@ -1,8 +1,8 @@
 ;;; ws-selector --- Simple workspace management per buffers.
 ;;;
 ;;; Author: vaslch0 <vasya.khoroshavin@gmail.com>
-;;; URL: https://github.com/VasKho/ws-selector
-;;; Package-Requires: (cl-lib dired-sidebar)
+;;; URL: https://github.com/VasKho/ws-selector.el
+;;; Package-Requires: (cl-lib)
 ;;; Commentary:
 ;;; Provides variable which stores current forkspace
 ;;; for every opened buffer.
@@ -33,14 +33,15 @@
 Now it adds more whitespaces before directory of workspace to make its look
 in vertico completion more nice.  This function must be called after
 initializing."
-  (let ((longest-prefix-len (+ ws-selector-workdir-indent (apply #'max (mapcar (lambda (a) (length (car a))) ws-selector-selection-alist)))))
+  (let ((longest-prefix-len (+ ws-selector-workdir-indent
+			       (apply #'max (mapcar (lambda (a) (length (car a))) ws-selector-selection-alist)))))
     (setq ws-selector-selection-alist
 	  (mapcar
 	   (lambda (a)
 	     (cons (car a) (concat (make-string (- longest-prefix-len (length (car a))) ? ) (cdr a))))
 		  ws-selector-selection-alist))))
 
-(defun ws-selector--set-frame-working-directory (frame path)
+(defun ws-selector-set-frame-working-directory (frame path)
   "This function is used to set PATH as working directory for FRAME."
   (cl-loop for cons in ws-selector-workspace-list
 	   when (equal (car cons) frame) do
@@ -62,7 +63,7 @@ initializing."
 	   when (eq (car cons) frame) do
 	   (setq ws-selector-workspace-list (remove cons ws-selector-workspace-list))
 	   return nil)
-  (ws-selector--set-frame-working-directory
+  (ws-selector-set-frame-working-directory
    frame
    (cl-loop for ws in ws-selector-selection-alist
 	    when (equal (car ws) workspace-name)
